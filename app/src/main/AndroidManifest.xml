@@ -78,6 +78,9 @@
             android:name=".thirdOxygenLevelScreen"
             android:exported="true" />
         <activity
+            android:name=".Statistics"
+            android:exported="true" />
+        <activity
             android:name=".secondOxygenLevelScreen"
             android:exported="true" />
         <activity
@@ -95,6 +98,12 @@
             tools:ignore="Instantiatable" />
         <activity
             android:name=".HeartRateFirstScreen"
+            android:exported="true" />
+        <activity
+            android:name=".ViewData"
+            android:exported="true" />
+        <activity
+            android:name=".ViewDataHeartRate"
             android:exported="true" />
         <activity
             android:name=".HomeActivity"

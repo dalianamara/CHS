@@ -12,6 +12,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button heartRateBtn;
     private Button oxygenBtn;
     private Button stepBtn;
+    private Button stepBtn1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ActivityMain.class));
+            }
+        });
+
+        stepBtn1 = (Button) findViewById(R.id.stepBtn1);
+        stepBtn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Statistics.class));
             }
         });
 

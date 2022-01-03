@@ -8,16 +8,35 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class thirdHeartRateScreen extends AppCompatActivity {
-    Button next_Activity_button;
+    Button next_Activity_button, readHeartRateBtn;
     double resultHeartRate;
+    long DateHolder;
+    String HourHolder;
+    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar today = Calendar.getInstance();
+    private DBHandler dbHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third_heart_rate_screen);
         next_Activity_button = (Button) findViewById(R.id.backBtn);
-        next_Activity_button.setOnClickListener(new View.OnClickListener() {
+        dbHandler = new DBHandler(thirdHeartRateScreen.this);
+        readHeartRateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // opening a new activity via a intent.
+                Intent i = new Intent(thirdHeartRateScreen.this, ViewDataHeartRate.class);
+                startActivity(i);
+            }
+        });
 
+        next_Activity_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(thirdHeartRateScreen.this, HomeActivity.class);
                 startActivity(intent);
@@ -31,5 +50,8 @@ public class thirdHeartRateScreen extends AppCompatActivity {
             resultHeartRate = bundle.getDouble("resultHeartRate");
             mResultHeartRate.setText(String.valueOf(resultHeartRate));
         }
+        DateHolder = new Date().getTime();
+        HourHolder = sdf.format(today.getTime());
+        dbHandler.addNewPulse(DateHolder, HourHolder, String.valueOf(resultHeartRate), "heart");
     }
 }

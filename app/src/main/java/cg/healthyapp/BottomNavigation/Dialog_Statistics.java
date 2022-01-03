@@ -14,7 +14,7 @@ import cg.healthyapp.util.Util;
 import java.util.Calendar;
 import java.util.Date;
 
-abstract class Dialog_Statistics {
+public abstract class Dialog_Statistics {
     public static Dialog getDialog(final Context c, int since_boot){
         final Dialog d = new Dialog(c);
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);

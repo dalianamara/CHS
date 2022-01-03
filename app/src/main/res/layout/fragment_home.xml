@@ -280,11 +280,12 @@
 
             <org.eazegraph.lib.charts.BarChart
                 android:id="@+id/bargraph"
-                android:layout_width="match_parent"
-                android:layout_height="143dp"
-                android:layout_below="@id/averageandtotaltext"
-                android:layout_marginTop="168dp"
-                android:visibility="invisible"
+                android:layout_width="306dp"
+                android:layout_height="121dp"
+                android:layout_below="@+id/averageandtotaltext"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="47dp"
                 app:egLegendHeight="35dp"
                 app:egShowValues="true" />
 

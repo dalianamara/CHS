@@ -342,10 +342,10 @@ if(barChart.getData().size()>0) barChart.clearChart();
 int steps;
 float distance ,stepsize=MyProfile.DEFAULT_STEP_SIZE;
 boolean stepsize_cm=true;
-if(!showSteps){
+
     SharedPreferences prefs = getActivity().getSharedPreferences("pedometer",Context.MODE_PRIVATE);
     stepsize=prefs.getFloat("stepsize_value",MyProfile.DEFAULT_STEP_SIZE);
-    stepsize_cm=prefs.getString("stepsize_unit",MyProfile.DEFAULT_STEP_UNIT).equals("cm");}
+    stepsize_cm=prefs.getString("stepsize_unit",MyProfile.DEFAULT_STEP_UNIT).equals("cm");
     barChart.setShowDecimal(!showSteps);
     BarModel bm;
     Database db=Database.getInstance(getActivity());
@@ -356,7 +356,7 @@ if(!showSteps){
         Pair<Long, Integer> current = last.get(i);
         steps = current.second;
         if (steps > 0) {
-            bm = new BarModel(df.format(new Date(current.first)), 0, steps > goal ? Color.parseColor("#69F0AE") : Color.parseColor("#40C4FF"));
+            bm = new BarModel(df.format(new Date(current.first)), 0, steps > goal ? Color.parseColor("#ECF87F") : Color.parseColor("#81B622"));
             if (showSteps) {
                 bm.setValue(steps);
             } else {
