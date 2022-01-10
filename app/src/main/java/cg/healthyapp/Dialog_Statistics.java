@@ -1,4 +1,4 @@
-package cg.healthyapp.BottomNavigation;
+package cg.healthyapp;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.view.Window;
 import android.widget.TextView;
 
 import cg.healthyapp.Database.Database;
-import cg.healthyapp.R;
 import cg.healthyapp.util.Util;
 
 import java.util.Calendar;

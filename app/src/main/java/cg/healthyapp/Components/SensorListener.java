@@ -46,8 +46,6 @@ public class SensorListener extends Service implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
-        // nobody knows what happens here: step value might magically decrease
-        // when this method is called...
         if (BuildConfig.DEBUG) Logger.log(sensor.getName() + " accuracy changed: " + accuracy);
     }
 

@@ -27,14 +27,6 @@ public class thirdHeartRateScreen extends AppCompatActivity {
         setContentView(R.layout.activity_third_heart_rate_screen);
         next_Activity_button = (Button) findViewById(R.id.backBtn);
         dbHandler = new DBHandler(thirdHeartRateScreen.this);
-        readHeartRateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // opening a new activity via a intent.
-                Intent i = new Intent(thirdHeartRateScreen.this, ViewDataHeartRate.class);
-                startActivity(i);
-            }
-        });
 
         next_Activity_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -52,7 +52,7 @@ public class AuthenticationActivity extends FragmentActivity { // AppCompatActiv
                 break;
         }
 
-        //Creat a biometric dialog box;
+        //Create a biometric dialog box;
         Executor executor = ContextCompat.getMainExecutor(this);
         FragmentActivity activity = this;
 

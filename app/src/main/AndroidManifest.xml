@@ -69,9 +69,6 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <activity
-            android:name=".secondStepsCounterScreen"
-            android:exported="true" />
-        <activity
             android:name=".firstStepsCounterScreen"
             android:exported="true" />
         <activity
@@ -98,12 +95,6 @@
             tools:ignore="Instantiatable" />
         <activity
             android:name=".HeartRateFirstScreen"
-            android:exported="true" />
-        <activity
-            android:name=".ViewData"
-            android:exported="true" />
-        <activity
-            android:name=".ViewDataHeartRate"
             android:exported="true" />
         <activity
             android:name=".HomeActivity"
