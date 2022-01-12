@@ -38,13 +38,12 @@ public class secondOxygenLevelScreen extends AppCompatActivity {
     private SurfaceView preview = null;
     private static PowerManager.WakeLock makeLock = null;
 
-    private Toast o2Toast;
     private ProgressBar progressBarO2;
     public int ProgP = 0;
     public int inc = 0;
     private static long startTime = 0;
     private double SamplingFreq;
-    private static final double RedBlueRadio = 0;
+
     double Stdr = 0;
     double Stdb = 0;
     double sumred = 0;

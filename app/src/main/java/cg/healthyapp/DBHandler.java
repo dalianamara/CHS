@@ -29,10 +29,10 @@ public class DBHandler extends SQLiteOpenHelper {
     // below variable is for our id column.
     private static final String ID_COL = "id";
 
-    // below variable is for our course name column
+    // below variable is for our date column
     private static final String DATE_COL = "date";
 
-    // below variable id for our course duration column.
+    // below variable is for our value column
     private static final String VALUE_COL = "value";
 
     private static final String HOUR_COL = "hour";
@@ -42,11 +42,11 @@ public class DBHandler extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    // below method is for creating a database by running a sqlite query
+    // below method is used for creating a database by running a sqlite query
     @Override
     public void onCreate(SQLiteDatabase db) {
         // on below line we are creating
-        // an sqlite query and we are
+        // a sqlite query and we are
         // setting our column names
         // along with their data types.
         String query = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
@@ -59,13 +59,13 @@ public class DBHandler extends SQLiteOpenHelper {
                 + DATE_COL + " TEXT,"+ HOUR_COL + " TEXT,"
                 + VALUE_COL + " TEXT)";
 //
-//         at last we are calling a exec sql
+//         at last we are calling an exec sql
 //         method to execute above sql query
         db.execSQL(query);
         db.execSQL(queryHeart);
     }
 
-    // this method is use to add new course to our sqlite database.
+    // this method is used to add new heart rate/oxygen to our sqlite database.
     public void addNewPulse(long date, String hour, String value, String TABLE) {
 
         // on below line we are creating a variable for
@@ -89,33 +89,6 @@ public class DBHandler extends SQLiteOpenHelper {
         // at last we are closing our
         // database after adding database.
         db.close();
-    }
-
-    // we have created a new method for reading all the courses.
-    public ArrayList<DataModal> readData(String TABLE) {
-        // on below line we are creating a
-        // database for reading our database.
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        // on below line we are creating a cursor with query to read data from database.
-        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE, null);
-
-        // on below line we are creating a new array list.
-        ArrayList<DataModal> courseModalArrayList = new ArrayList<>();
-
-        // moving our cursor to first position.
-        if (cursorCourses.moveToFirst()) {
-            do {
-                // on below line we are adding the data from cursor to our array list.
-                courseModalArrayList.add(new DataModal(cursorCourses.getString(1),
-                        cursorCourses.getString(2), cursorCourses.getString(3)));
-            } while (cursorCourses.moveToNext());
-            // moving our cursor to next.
-        }
-        // at last closing our cursor
-        // and returning our array list.
-        cursorCourses.close();
-        return courseModalArrayList;
     }
 
     @Override

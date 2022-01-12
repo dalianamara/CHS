@@ -41,12 +41,12 @@ import java.util.Locale;
 import de.j4velin.lib.colorpicker.BuildConfig;
 
 public class FragmentHome extends Fragment  implements SensorEventListener{
-public static NumberFormat formatter=NumberFormat.getInstance(Locale.getDefault());
-private TextView stepsView,totalView,averageView,calories;
-private PieModel sliceCurrent;
- private PieChart pg;
- public static int totalstepsgoal=0;
- private int todayoffset, total_start, goal,since_boot, totaldays;
+    public static NumberFormat formatter=NumberFormat.getInstance(Locale.getDefault());
+    private TextView steps_View,total_View,average_View,calories;
+    private PieModel sliceCurrent;
+    private PieChart pg;
+    public static int total_steps=0;
+    private int todays_offset, total_start,since_boot, total_days;
     private boolean showSteps = true;
     Button next_Activity_button;
     @Override
@@ -55,32 +55,40 @@ private PieModel sliceCurrent;
         setHasOptionsMenu(true);
         if(Build.VERSION.SDK_INT>=26){
             API26Wrapper.startForegroundService(getActivity(),new Intent(getActivity(), SensorListener.class));
-    }
+        }
         else{
             getActivity().startService(new Intent(getActivity(), SensorListener.class));
         }
 
     }
 
-
     @Override
-    public View onCreateView(final LayoutInflater inflater,  final  ViewGroup container,
-                            final  Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,  final  ViewGroup container, final  Bundle savedInstanceState) {
         final View view= inflater.inflate(R.layout.fragment_home,null);
-        stepsView=view.findViewById(R.id.stepsinpiechart);
-       totalView=view.findViewById(R.id.total);
-       averageView=view.findViewById(R.id.average);
-       calories=view.findViewById(R.id.calories);
-       pg=view.findViewById(R.id.graph);
-       setPiechart();
-      pg.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              showSteps = !showSteps;
-              stepsDistanceChanges();
-          }
+        steps_View=view.findViewById(R.id.stepspiechart);
+        total_View=view.findViewById(R.id.total);
+        average_View=view.findViewById(R.id.average);
+        calories=view.findViewById(R.id.calories);
+        pg=view.findViewById(R.id.graph);
+        setPiechart();
+        pg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSteps = !showSteps;
+                stepsDistanceChanges();
+            }
+        });
 
-      });
+        next_Activity_button = view.findViewById(R.id.backBtnSteps);
+        next_Activity_button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HomeActivity.class);
+                startActivity(intent);
+
+            }
+        });
         return view;
     }
 
@@ -89,7 +97,7 @@ private PieModel sliceCurrent;
         super.onResume();
         Database db = Database.getInstance(getActivity());
         if (BuildConfig.DEBUG) db.logState();
-        todayoffset = db.getSteps(Util.getToday());
+        todays_offset = db.getSteps(Util.getToday());
         SharedPreferences prefs =
                 getActivity().getSharedPreferences("pedometer", Context.MODE_PRIVATE);
         since_boot = db.getCurrentSteps();
@@ -116,8 +124,8 @@ private PieModel sliceCurrent;
             sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
         }
         since_boot -= pauseDifference;
-        total_start = db.getTotalWithoutToday();
-        totaldays = db.getDays();
+        total_start = db.getTotalStepsWithoutToday();
+        total_days = db.getDays();
         db.close();
         stepsDistanceChanges();
     }
@@ -137,8 +145,6 @@ private PieModel sliceCurrent;
         try{
             SensorManager sm=(SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
             sm.unregisterListener(this);
-
-
         } catch (Exception e) {
             if(BuildConfig.DEBUG) Logger.log(e);
             e.printStackTrace();
@@ -150,58 +156,58 @@ private PieModel sliceCurrent;
 
     private void updatePie() {
         if(BuildConfig.DEBUG) Logger.log("UI-updatesteps:"+since_boot);
-        int steps_today=Math.max(todayoffset+since_boot,0);
+        int steps_today=Math.max(todays_offset+since_boot,0);
         sliceCurrent.setValue(steps_today);
-        if(goal-steps_today>0) {
+        if(steps_today>0) {
             pg.clearChart();
             pg.addPieSlice(sliceCurrent);
         }
-            pg.update();
-            if(showSteps){
-                stepsView.setText(formatter.format(steps_today));
-                double kcal=steps_today*0.04;
-                calories.setText(formatter.format(kcal));
-                totalView.setText(formatter.format(total_start+steps_today));
-                averageView.setText(formatter.format((total_start+steps_today)/totaldays));
-                totalstepsgoal=total_start+steps_today;
-            }
-            else{
-                SharedPreferences prefs=getActivity().getSharedPreferences("pedometer",Context.MODE_PRIVATE);
-                totalstepsgoal=total_start+steps_today;
-            }
+        pg.update();
+        if(showSteps){
+            steps_View.setText(formatter.format(steps_today));
+            double kcal=steps_today*0.04;
+            calories.setText(formatter.format(kcal));
+            total_View.setText(formatter.format(total_start+steps_today));
+            average_View.setText(formatter.format((total_start+steps_today)/total_days));
+            total_steps=total_start+steps_today;
+        }
+        else{
+            SharedPreferences prefs=getActivity().getSharedPreferences("pedometer",Context.MODE_PRIVATE);
+            total_steps=total_start+steps_today;
+        }
     }
     private void updateBars() {
 
-    SimpleDateFormat df= new SimpleDateFormat("E",Locale.getDefault());
-    BarChart barChart =(BarChart) getView().findViewById(R.id.bargraph);
-    if(barChart.getData().size()>0) barChart.clearChart();
-    int steps;
+        SimpleDateFormat df= new SimpleDateFormat("E",Locale.getDefault());
+        BarChart barChart =(BarChart) getView().findViewById(R.id.bargraph);
+        if(barChart.getData().size()>0) barChart.clearChart();
+        int steps;
 
-    SharedPreferences prefs = getActivity().getSharedPreferences("pedometer",Context.MODE_PRIVATE);
-    barChart.setShowDecimal(!showSteps);
-    BarModel bm;
-    Database db=Database.getInstance(getActivity());
-    List<Pair<Long,Integer>> last = db.getLastEntries(7);
-    db.close();
-    for(int i=last.size()-1;i>0;i--) {
-        Pair<Long, Integer> current = last.get(i);
-        steps = current.second;
-        if (steps > 0) {
-            bm = new BarModel(df.format(new Date(current.first)), 0, steps > goal ? Color.parseColor("#ECF87F") : Color.parseColor("#81B622"));
-            if (showSteps) {
-                bm.setValue(steps);
+        SharedPreferences prefs = getActivity().getSharedPreferences("pedometer",Context.MODE_PRIVATE);
+        barChart.setShowDecimal(!showSteps);
+        BarModel bm;
+        Database db=Database.getInstance(getActivity());
+        List<Pair<Long,Integer>> last = db.getLastEntries(7);
+        db.close();
+        for(int i=last.size()-1;i>0;i--) {
+            Pair<Long, Integer> current = last.get(i);
+            steps = current.second;
+            if (steps > 0) {
+                bm = new BarModel(df.format(new Date(current.first)), 0,Color.parseColor("#81B622"));
+                if (showSteps) {
+                    bm.setValue(steps);
+                }
+                barChart.addBar(bm);
             }
-        barChart.addBar(bm);
-    }
-}
-  if(barChart.getData().size()>0){
-      barChart.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              Dialog_Statistics.getDialog(getActivity(),since_boot).show();
-          }
-      });
-  }
+        }
+        if(barChart.getData().size()>0){
+            barChart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog_Statistics.getDialog(getActivity(),since_boot).show();
+                }
+            });
+        }
     }
 
     private void setPiechart() {
@@ -215,9 +221,9 @@ private PieModel sliceCurrent;
     @Override
     public void onSensorChanged(SensorEvent event) {
         if(BuildConfig.DEBUG) Logger.log(
-                "UI- sensorchanged| todatyoffset:"+todayoffset+"sinceboot:"+since_boot+event.values[0]);
+                "UI- sensorchanged| todatyoffset:"+todays_offset+"sinceboot:"+since_boot+event.values[0]);
         if(event.values[0]>Integer.MAX_VALUE || event.values[0]==0){
-            todayoffset=-(int) event.values[0];
+            todays_offset=-(int) event.values[0];
             Database db= Database.getInstance(getActivity());
             db.insertNewDay(Util.getToday(),(int)event.values[0]);
             db.close();
@@ -230,6 +236,6 @@ private PieModel sliceCurrent;
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-     //will not change
+        //will not change
     }
 }

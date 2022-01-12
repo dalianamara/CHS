@@ -27,7 +27,6 @@ public class thirdOxygenLevelScreen extends AppCompatActivity {
     long DateHolder;
     String HourHolder;
     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
     Calendar today = Calendar.getInstance();
     int o2;
     private DBHandler dbHandler;
@@ -51,7 +50,7 @@ public class thirdOxygenLevelScreen extends AppCompatActivity {
             o2 = bundle.getInt("textO2Count");
             mtextO2Count.setText(String.valueOf(o2));
         }
-//        DateHolder = format1.format(today.getTime());
+
         DateHolder = new Date().getTime();
         HourHolder = sdf.format(today.getTime());
         dbHandler.addNewPulse(DateHolder, HourHolder, String.valueOf(o2), "oxygen");

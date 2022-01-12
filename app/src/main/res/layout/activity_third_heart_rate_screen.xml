@@ -27,8 +27,8 @@
         android:layout_marginTop="100dp"
         android:layout_marginEnd="88dp"
         android:layout_marginBottom="24dp"
-        android:text="Normal blood oxygen saturation
-level will be around 95–100%"
+        android:text="Normal heart rate
+level will be bigger than 60bpm"
         android:textColor="#000000"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"

@@ -49,17 +49,7 @@ public class secondHeartRateScreen extends Activity implements ActivityCompat.On
     public static final int MESSAGE_UPDATE_FINAL = 2;
     public static final int MESSAGE_CAMERA_NOT_AVAILABLE = 3;
 
-    private static final int MENU_INDEX_NEW_MEASUREMENT = 0;
-    private static final int MENU_INDEX_EXPORT_RESULT = 1;
-    private static final int MENU_INDEX_EXPORT_DETAILS = 2;
-
     private SurfaceView preview = null;
-    private static PowerManager.WakeLock makeLock = null;
-
-    public enum VIEW_STATE {
-        MEASUREMENT,
-        SHOW_RESULTS
-    }
 
     private boolean justShared = false;
     public double resultHeartRate;
@@ -76,7 +66,6 @@ public class secondHeartRateScreen extends Activity implements ActivityCompat.On
 
             if (msg.what == MESSAGE_UPDATE_FINAL) {
                 ((TextView) findViewById(R.id.textRestHeartBeats)).setText(msg.obj.toString());
-                //setViewState(VIEW_STATE.SHOW_RESULTS);
 
                 String text = msg.obj.toString();
                 String[] arrOfStr = text.split(" ", 5);
@@ -136,10 +125,6 @@ public class secondHeartRateScreen extends Activity implements ActivityCompat.On
                 ).show();
             }
 
-            // hide the new measurement item while another one is in progress in order to wait
-            // for the previous one to finish
-            //((Toolbar) findViewById(R.id.toolbar)).getMenu().getItem(MENU_INDEX_NEW_MEASUREMENT).setVisible(false);
-
             cameraService.start(previewSurface);
             analyzer.measurePulse(cameraTextureView, cameraService);
         }
@@ -195,20 +180,13 @@ public class secondHeartRateScreen extends Activity implements ActivityCompat.On
 
         // clear prior results
         char[] empty = new char[0];
-        //((EditText) findViewById(R.id.editText)).setText(empty, 0, 0);
-        ((TextView) findViewById(R.id.textView)).setText(empty, 0, 0);
 
-        // hide the new measurement item while another one is in progress in order to wait
-        // for the previous one to finish
-        // Exporting results cannot be done, either, as it would read from the already cleared UI.
-        //setViewState(VIEW_STATE.MEASUREMENT);
+        ((TextView) findViewById(R.id.textView)).setText(empty, 0, 0);
 
         TextureView cameraTextureView = findViewById(R.id.textureView2);
         SurfaceTexture previewSurfaceTexture = cameraTextureView.getSurfaceTexture();
 
         if (previewSurfaceTexture != null) {
-            // this first appears when we close the application and switch back
-            // - TextureView isn't quite ready at the first onResume.
             Surface previewSurface = new Surface(previewSurfaceTexture);
             cameraService.start(previewSurface);
             analyzer.measurePulse(cameraTextureView, cameraService);

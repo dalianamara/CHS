@@ -1,5 +1,3 @@
-
-
 package cg.healthyapp.util;
 
 import android.annotation.TargetApi;

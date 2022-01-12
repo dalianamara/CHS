@@ -33,6 +33,7 @@ import java.util.Locale;
 import cg.healthyapp.Database.Database;
 
 public class Statistics extends AppCompatActivity {
+
     private DBHandler dbHandler;
     Cursor cOxygen = null, cHeart = null;
     Date date = new Date();

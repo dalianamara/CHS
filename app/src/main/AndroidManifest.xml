@@ -49,11 +49,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".Components.AppUpdateReceiever">
-            <intent-filter>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-            </intent-filter>
-        </receiver>
 
         <service android:name=".Components.SensorListener" />
 
@@ -68,9 +63,6 @@
             android:name=".Widget.WidgetUpdateService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <activity
-            android:name=".firstStepsCounterScreen"
-            android:exported="true" />
         <activity
             android:name=".thirdOxygenLevelScreen"
             android:exported="true" />

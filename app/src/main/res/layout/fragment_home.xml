@@ -58,6 +58,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <Button
+                android:id="@+id/backBtnSteps"
+                android:layout_width="wrap_content"
+                android:layout_height="31dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="368dp"
+                android:background="@drawable/arrowdrawingnext"
+                android:backgroundTint="#fff"
+                android:rotationY="-180"
+                tools:ignore="MissingConstraints" />
+
             <org.eazegraph.lib.charts.PieChart
                 android:id="@+id/graph"
                 android:layout_width="match_parent"
@@ -70,7 +82,7 @@
             </org.eazegraph.lib.charts.PieChart>
 
             <TextView
-                android:id="@+id/stepsinpiechart"
+                android:id="@+id/stepspiechart"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="210dp"

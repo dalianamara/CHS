@@ -1,5 +1,3 @@
-
-
 package cg.healthyapp.Components;
 
 import android.content.BroadcastReceiver;
@@ -29,7 +27,7 @@ public class BootReceiver extends BroadcastReceiver {
             // can we at least recover some steps?
             int steps = Math.max(0, db.getCurrentSteps());
             if (BuildConfig.DEBUG) Logger.log("Trying to recover " + steps + " steps");
-            db.addToLastEntry(steps);
+            db.addToLast(steps);
         }
         // last entry might still have a negative step value, so remove that
         // row if that's the case

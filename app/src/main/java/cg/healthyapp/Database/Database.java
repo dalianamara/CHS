@@ -18,24 +18,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Database extends SQLiteOpenHelper {
     private final static String DB_NAME = "steps";
     private final static int DB_VERSION = 2;
-    private static Database instance;
-    private static final AtomicInteger openCounter = new AtomicInteger();
+    private static Database db;
+    private static final AtomicInteger open = new AtomicInteger();
 
     private Database(final Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
     public static synchronized Database getInstance(final Context c) {
-        if (instance == null) {
-            instance = new Database(c.getApplicationContext());
+        if (db == null) {
+            db = new Database(c.getApplicationContext());
         }
-        openCounter.incrementAndGet();
-        return instance;
+        open.incrementAndGet();
+        return db;
     }
 
     @Override
     public void close() {
-        if (openCounter.decrementAndGet() == 0) {
+        if (open.decrementAndGet() == 0) {
             super.close();
         }
     }
@@ -71,7 +71,7 @@ public class Database extends SQLiteOpenHelper {
             if (c.getCount() == 0 && steps >= 0) {
 
                 // add 'steps' to yesterdays count
-                addToLastEntry(steps);
+                addToLast(steps);
 
                 // add today
                 ContentValues values = new ContentValues();
@@ -90,30 +90,11 @@ public class Database extends SQLiteOpenHelper {
             getWritableDatabase().endTransaction();
         }
     }
-    public void addToLastEntry(int steps) {
+    public void addToLast(int steps) {
         getWritableDatabase().execSQL("UPDATE " + DB_NAME + " SET steps = steps + " + steps +
                 " WHERE date = (SELECT MAX(date) FROM " + DB_NAME + ")");
     }
 
-    public boolean insertDayFromBackup(long date, int steps) {
-        getWritableDatabase().beginTransaction();
-        boolean newEntryCreated = false;
-        try {
-            ContentValues values = new ContentValues();
-            values.put("steps", steps);
-            int updatedRows = getWritableDatabase()
-                    .update(DB_NAME, values, "date = ?", new String[]{String.valueOf(date)});
-            if (updatedRows == 0) {
-                values.put("date", date);
-                getWritableDatabase().insert(DB_NAME, null, values);
-                newEntryCreated = true;
-            }
-            getWritableDatabase().setTransactionSuccessful();
-        } finally {
-            getWritableDatabase().endTransaction();
-        }
-        return newEntryCreated;
-    }
     public void logState() {
         if (BuildConfig.DEBUG) {
             Cursor c = getReadableDatabase()
@@ -123,18 +104,10 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public int getTotalWithoutToday() {
+    public int getTotalStepsWithoutToday() {
         Cursor c = getReadableDatabase()
                 .query(DB_NAME, new String[]{"SUM(steps)"}, "steps > 0 AND date > 0 AND date < ?",
                         new String[]{String.valueOf(Util.getToday())}, null, null, null);
-        c.moveToFirst();
-        int re = c.getInt(0);
-        c.close();
-        return re;
-    }
-    public int getRecord() {
-        Cursor c = getReadableDatabase()
-                .query(DB_NAME, new String[]{"MAX(steps)"}, "date > 0", null, null, null, null);
         c.moveToFirst();
         int re = c.getInt(0);
         c.close();
@@ -193,9 +166,6 @@ public class Database extends SQLiteOpenHelper {
     public void removeNegativeEntries() {
         getWritableDatabase().delete(DB_NAME, "steps < ?", new String[]{"0"});
     }
-    public void removeInvalidEntries() {
-        getWritableDatabase().delete(DB_NAME, "steps >= ?", new String[]{"200000"});
-    }
     public int getDaysWithoutToday() {
         Cursor c = getReadableDatabase()
                 .query(DB_NAME, new String[]{"COUNT(*)"}, "steps > ? AND date < ? AND date > 0",
@@ -207,7 +177,7 @@ public class Database extends SQLiteOpenHelper {
         return re < 0 ? 0 : re;
     }
     public int getDays() {
-        // todays is not counted yet
+        // today is not counted yet
         int re = this.getDaysWithoutToday() + 1;
         return re;
     }

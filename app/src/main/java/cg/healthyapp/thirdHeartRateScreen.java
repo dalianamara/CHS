@@ -18,7 +18,6 @@ public class thirdHeartRateScreen extends AppCompatActivity {
     long DateHolder;
     String HourHolder;
     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
     Calendar today = Calendar.getInstance();
     private DBHandler dbHandler;
     @Override

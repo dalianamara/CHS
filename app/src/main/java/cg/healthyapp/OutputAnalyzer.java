@@ -81,8 +81,6 @@ class OutputAnalyzer {
                     for (int pixelIndex = 0; pixelIndex < pixelCount; pixelIndex++) {
                         measurement += (pixels[pixelIndex] >> 16) & 0xff;
                     }
-                    // max int is 2^31 (2147483647) , so width and height can be at most 2^11,
-                    // as 2^8 * 2^11 * 2^11 = 2^30, just below the limit
 
                     store.add(measurement);
 
@@ -137,37 +135,10 @@ class OutputAnalyzer {
                 returnValueSb.append(currentValue);
                 returnValueSb.append(activity.getString(R.string.row_separator));
 
-                // look for "drops" of 0.15 - 0.75 in the value
-                // a drop may take 2-3 ticks.
-                // int dropCount = 0;
-                // for (int stdValueIdx = 4; stdValueIdx < stdValues.size(); stdValueIdx++) {
-                //     if (((stdValues.get(stdValueIdx - 2).measurement - stdValues.get(stdValueIdx).measurement) > dropHeight) &&
-                //             !((stdValues.get(stdValueIdx - 3).measurement - stdValues.get(stdValueIdx - 1).measurement) > dropHeight) &&
-                //            !((stdValues.get(stdValueIdx - 4).measurement - stdValues.get(stdValueIdx - 2).measurement) > dropHeight)
-                //    ) {
-                //        dropCount++;
-                //    }
-                // }
-
-                // returnValueSb.append(activity.getString(R.string.detected_pulse));
-                // returnValueSb.append(activity.getString(R.string.separator));
-                // returnValueSb.append((float) dropCount / ((float) (measurementLength - clipLength) / 1000f / 60f));
-                // returnValueSb.append(activity.getString(R.string.row_separator));
-
-                returnValueSb.append(activity.getString(R.string.raw_values));
-                returnValueSb.append(activity.getString(R.string.row_separator));
-
-
                 for (int stdValueIdx = 0; stdValueIdx < stdValues.size(); stdValueIdx++) {
                     // stdValues.forEach((value) -> { // would require API level 24 instead of 21.
                     Measurement<Float> value = stdValues.get(stdValueIdx);
-                    String timeStampString =
-                            new SimpleDateFormat(
-                                    activity.getString(R.string.dateFormatGranular),
-                                    Locale.getDefault()
-                            ).format(value.timestamp);
-                    returnValueSb.append(timeStampString);
-                    returnValueSb.append(activity.getString(R.string.separator));
+
                     returnValueSb.append(value.measurement);
                     returnValueSb.append(activity.getString(R.string.row_separator));
                 }
@@ -187,7 +158,6 @@ class OutputAnalyzer {
             }
         };
 
-        //activity.setViewState(HeartRateFirstScreen.VIEW_STATE.MEASUREMENT);
         timer.start();
     }
 

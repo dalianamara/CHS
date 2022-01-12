@@ -1,4 +1,3 @@
-
 package cg.healthyapp.Components;
 
 import android.content.BroadcastReceiver;
@@ -26,7 +25,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
             int steps = db.getCurrentSteps();
             db.insertNewDay(Util.getToday(), steps);
         } else {
-            db.addToLastEntry(db.getCurrentSteps());
+            db.addToLast(db.getCurrentSteps());
         }
         db.close();
     }

@@ -1,4 +1,3 @@
-
 package cg.healthyapp.Components;
 
 import android.app.AlarmManager;
@@ -39,8 +38,8 @@ public class SensorListener extends Service implements SensorEventListener {
     private final static int SAVE_OFFSET_STEPS = 500;
 
     private static int steps;
-    private static int lastSaveSteps;
-    private static long lastSaveTime;
+    private static int last_save_steps;
+    private static long last_save_time;
 
     private final BroadcastReceiver shutdownReceiver = new ShutdownReceiver();
 
@@ -64,11 +63,11 @@ public class SensorListener extends Service implements SensorEventListener {
      * @return true, if notification was updated
      */
     private boolean updateIfNecessary() {
-        if (steps > lastSaveSteps + SAVE_OFFSET_STEPS ||
-                (steps > 0 && System.currentTimeMillis() > lastSaveTime + SAVE_OFFSET_TIME)) {
+        if (steps > last_save_steps + SAVE_OFFSET_STEPS ||
+                (steps > 0 && System.currentTimeMillis() > last_save_time + SAVE_OFFSET_TIME)) {
             if (BuildConfig.DEBUG) Logger.log(
-                    "saving steps: steps=" + steps + " lastSave=" + lastSaveSteps +
-                            " lastSaveTime=" + new Date(lastSaveTime));
+                    "saving steps: steps=" + steps + " lastSave=" + last_save_steps +
+                            " last_save_time=" + new Date(last_save_time));
             Database db = Database.getInstance(this);
             if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
                 int pauseDifference = steps -
@@ -83,8 +82,8 @@ public class SensorListener extends Service implements SensorEventListener {
             }
             db.saveCurrentSteps(steps);
             db.close();
-            lastSaveSteps = steps;
-            lastSaveTime = System.currentTimeMillis();
+            last_save_steps = steps;
+            last_save_time = System.currentTimeMillis();
             showNotification(); // update notification
             WidgetUpdateService.enqueueUpdate(this);
             return true;
